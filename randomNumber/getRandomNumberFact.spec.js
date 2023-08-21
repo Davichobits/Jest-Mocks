@@ -8,6 +8,10 @@ jest.mock("./getRandomNumberFactService.js", ()=>{
 
 // jest.mock("./getRandomNumberFactService.js")
 
+beforeEach(()=>{
+  getRandomNumberFactService.mockClear();
+})
+
 it('should return a random number fact', async ()=>{
   // getRandomNumberFactService.mockReturnValueOnce({text: ""})
   const numberFact = await getRandomNumberFact();
@@ -16,5 +20,11 @@ it('should return a random number fact', async ()=>{
 
 it('should call getRandomNumberFactService', async ()=>{
   await getRandomNumberFact()
-  expect(getRandomNumberFactService).toHaveBeenCalled()
+  expect(getRandomNumberFactService).toHaveBeenCalledTimes(1)
+})
+
+it('should return an error when the service throws an exception', async ()=>{
+  getRandomNumberFactService.mockReturnValueOnce(new Error('ups'))
+  const numberFact = await getRandomNumberFact();
+  expect(numberFact).toBeInstanceOf(Error);
 })
